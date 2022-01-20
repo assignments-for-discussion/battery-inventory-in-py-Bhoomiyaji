@@ -1,24 +1,43 @@
-def count_batteries_by_usage(cycles):
-    my_dict = {"lowCount": 0, "mediumCount": 0, "highCount": 0}
+def count_batteries_by_usage(cycles, low, med):
+    hashset = {"lowCount": 0, "mediumCount": 0, "highCount": 0}
+
     for c in cycles:
-        if c < 400:
-            my_dict["lowCount"] += 1
-        elif 400 <= c <= 919:
-            my_dict["mediumCount"] += 1
-        elif c >= 920:
-            my_dict["highCount"] += 1
 
-    return my_dict
+        if c < low:
+            hashset["lowCount"] += 1
 
+        elif low <= c <= med:
+            hashset["mediumCount"] += 1
 
-def test_bucketing_by_number_of_cycles():
-    print("Counting batteries by usage cycles...\n")
-    counts = count_batteries_by_usage([100, 300, 400, 500, 600, 900, 920, 1000])
-    assert(counts["lowCount"] == 1)
-    assert(counts["mediumCount"] == 4)
-    assert(counts["highCount"] == 2)
-    print("Done counting: ")
+        else:
+            hashset["highCount"] += 1
+
+    return hashset
 
 
+def test_bucketing_by_number_of_cycles_preset():
+    cycles_list = [100, 200, 300, 399, 400, 500, 600, 900, 919, 920, 999, 1000]
+
+    low_count, med_count = 400, 919
+
+    counts = count_batteries_by_usage(cycles_list, low = low_count, med = med_count)
+
+    print("Count\t\tValue")
+    for k, v in counts.items():
+        print(f"{k}\t{v}")
+
+    assert(counts["lowCount"] == 4)
+    assert(counts["mediumCount"] == 5)
+    assert(counts["highCount"] == 3)
+
+    print("Done counting")
+
+
+
+def main():
+  
+    test_bucketing_by_number_of_cycles_preset()
+
+   
 if __name__ == "__main__":
-    test_bucketing_by_number_of_cycles()
+    main()
